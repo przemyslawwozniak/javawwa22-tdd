@@ -1,6 +1,7 @@
 package pl.sda.javawwa22.imitationclasses;
 
 import org.junit.Test;
+import pl.sda.javawwa22.imitationclasses.exceptions.NoSuchUserException;
 
 import java.util.List;
 
@@ -33,19 +34,36 @@ public class NotesServiceTest {
         assertEquals("PW", pwNotes.get(0).getFullName());
     }
 
-    @Test
-    public void average_of_null() {
+    @Test(expected = NoSuchUserException.class)
+    public void average_of_nonexistent() {
+        //given:
 
+        //when:
+        notesService.averageOf("PW");
+
+        //then:
+        //...throws exception
     }
 
-    @Test
-    public void average_of_nonexistent() {
-
+    @Test(expected = IllegalArgumentException.class)
+    public void average_of_null() {
+        notesService.averageOf(null);
     }
 
     @Test
     public void average_of_existing() {
+        //given:
+        Note note = Note.of("PW", 5.0);
+        Note note2 = Note.of("PW", 3.0);
 
+        notesService.add(note);
+        notesService.add(note2);
+
+        //when:
+        double avgMarkOfPW = notesService.averageOf("PW");
+
+        //then:
+        assertEquals(4.0, avgMarkOfPW, 0.0001);
     }
 
     //TestNG ma adnotacje 'dependsOn', w zwiazku z czym mozemy miec 100% pewnosci odnosnie 'add'
