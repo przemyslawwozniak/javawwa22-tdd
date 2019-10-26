@@ -10,6 +10,15 @@ public class User {
     LocalDateTime registered;
     UserStatus status;
 
+    //package-private
+    User() {}
+
+    public User(String username) {
+        this.username = username;
+        this.registered = LocalDateTime.now();
+        this.status = UserStatus.INITIALIZED;
+    }
+
     public void printLastLoggedIn() {
         System.out.println(getLastLoggedInText());
     }
