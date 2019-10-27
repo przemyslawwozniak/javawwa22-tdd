@@ -153,7 +153,7 @@ public class TicTacToeTest {
                 .isEqualTo("-X-OXX-O-");
     }
 
-    @Test
+    @Test(dataProvider = "wonGamesPlayed")
     public void check_winning_positions(String winningSequence, Board.Sign sign) {
         board = spy(new Board(Board.Sign.X));
         when(board.getBoardView()).thenReturn(winningSequence);
@@ -164,16 +164,17 @@ public class TicTacToeTest {
     }
 
     /*
-    XOX
-    OXO
-    O_X
+    -XO
+    -XO
+    -X-
      */
     @DataProvider(name = "wonGamesPlayed")
     private Object[][] getWonGamesPlayed() {
         return new Object[][] {
                 {"XOXOXOO-X", Board.Sign.X},
-                {"", Board.Sign.X},
-                {"", Board.Sign.X},
+                {"OO-OXXOXX", Board.Sign.O},
+                {"X---X-OOX", Board.Sign.X},
+                {"-XO-XO-X-", Board.Sign.X},
         };
     }
 

@@ -67,13 +67,15 @@ public class Board {
         String boardView = getBoardView();
         for(String winningSeq : WINNING_SEQUENCES) {
             int winningPositionsTaken = 0;
+            int it = 0;
             for(char c : winningSeq.toCharArray()) {
                 if(c == 'S') {
                     //Sign.X.name() = "X" -> 'X'
-                    if(c == sign.name().charAt(0)) {
+                    if(boardView.charAt(it) == sign.name().charAt(0)) {
                         winningPositionsTaken++;
                     }
                 }
+                it++;
             }
             if(winningPositionsTaken == 3) {
                 return true;
