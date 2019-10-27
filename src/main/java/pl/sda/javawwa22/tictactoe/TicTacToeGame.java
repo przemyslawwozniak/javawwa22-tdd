@@ -22,7 +22,79 @@ public class TicTacToeGame {
         Player playerA, playerB;
 
         if(choose == 1) {
-            System.out.println("AI support coming soon");
+            //System.out.println("AI support coming soon");
+            System.out.println("Witamy w grze dla jednego gracza.");
+
+            System.out.println("Czym grasz czlowieku? 1 - X, 2 - O");
+            choose = sc.nextInt();
+            if(choose == 1) {
+                playerA = new Player(Board.Sign.X);
+                playerB = new AIPlayer(Board.Sign.O);
+            }
+            else {
+                playerA = new Player(Board.Sign.O);
+                playerB = new AIPlayer(Board.Sign.X);
+            }
+
+            if(Math.random() > 0.5) {
+                board = new Board(Board.Sign.X);
+                System.out.println("Gre zaczyna gracz X");
+            }
+            else {
+                board = new Board(Board.Sign.O);
+                System.out.println("Gre zaczyna gracz O");
+            }
+
+            Player currentPlayer = getCurrentPlayer(board.getCurrentSign(), playerA, playerB);
+
+            board.printBoard();
+
+            if(currentPlayer instanceof AIPlayer) {
+                ((AIPlayer) currentPlayer).placeSign(board);
+            }
+            else {
+                System.out.println("Wybierz pozycje.");
+                choose = sc.nextInt();
+                while(choose < 0 || choose > 8) {
+                    System.out.println("Mozesz wybrac tylko pozycje 0...8. Podaj poprawnie.");
+                    choose = sc.nextInt();
+                }
+                currentPlayer.placeSign(board, choose);   //current sign sie zmienia
+            }
+
+            boolean isGameWon = false;
+
+            do {
+                //6. Wyswietlenie zaktualizowanej planszy
+                board.printBoard();
+                //7. Zmiana gracza na kolejnego i wyswietlenie info, zeby postawil znak
+                currentPlayer = getCurrentPlayer(board.getCurrentSign(), playerA, playerB);
+                System.out.println("Teraz ruch wykonuje gracz: " + currentPlayer);
+                if(currentPlayer instanceof AIPlayer) {
+                    ((AIPlayer) currentPlayer).placeSign(board);
+                }
+                else {
+                    System.out.println("Wybierz pozycje: ");
+                    //8. Gracz wybiera pozycje, ktore chca zajac
+                    choose = sc.nextInt();
+                    while(choose < 0 || choose > 8) {
+                        System.out.println("Mozesz wybrac tylko pozycje 0...8. Podaj poprawnie.");
+                        choose = sc.nextInt();
+                    }
+                    currentPlayer.placeSign(board, choose);
+                }
+                //9. Wyswietlenie zaktualizowanej planszy.
+                //10. Sprawdzenie, czy gracz ktory przed chwila postawil znak, wygral
+                isGameWon = board.checkWinner(board.currentSign.reverse()); //sprawdzam dla tego ktory przed chwila wykonal ruch
+                //11. Zmiana gracza...
+                if(isGameWon) {
+                    System.out.println("MAMY ZWYCIEZCE - WYGRAL GRACZ: " + board.currentSign.reverse());
+                }
+                else if(board.isBoardFull()) {
+                    System.out.println("REMIS!!!");
+                }
+            }
+            while(!isGameWon && !board.isBoardFull());
         }
         else {
             System.out.println("Witamy w grze dla wielu graczy.");
