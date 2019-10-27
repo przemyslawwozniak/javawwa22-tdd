@@ -42,4 +42,92 @@ public class UserTest {
                 .as("User not registered at 'LocalDateTime.now()'");
     }
 
+    @Test
+    public void prints_expected_text() {
+        //given
+        user = new User("pw92");
+
+        //when:
+        user.login();
+        //username@2019-08-11T10:20:08.858
+        String text = user.getLastLoggedInText();
+        System.out.println(text);
+
+        //then
+        Assertions.assertThat(text)
+                .matches("\\w+@\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}");
+    }
+
+    @Test
+    public void status_changes_from_INITIALIZED_to_ACTIVATED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.ACTIVATED);
+
+        //then:
+        Assertions.assertThat(user.status)
+                .isEqualTo(User.UserStatus.ACTIVATED);
+    }
+
+    @Test
+    public void status_changes_from_ACTIVATED_to_DEACTIVATED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.ACTIVATED);
+        user.setStatus(User.UserStatus.DEACTIVATED);
+
+        //then:
+        Assertions.assertThat(user.status)
+                .isEqualTo(User.UserStatus.DEACTIVATED);
+    }
+
+    @Test
+    public void status_changes_from_DEACTIVATED_to_ACTIVATED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.ACTIVATED);
+        user.setStatus(User.UserStatus.DEACTIVATED);
+        user.setStatus(User.UserStatus.ACTIVATED);
+
+        //then:
+        Assertions.assertThat(user.status)
+                .isEqualTo(User.UserStatus.ACTIVATED);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void status_DOES_NOT_change_from_INITIALIZED_to_DEACTIVATED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.DEACTIVATED);
+
+        //then throws IllegalArgumentException
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void status_DOES_NOT_change_from_ACTIVATED_to_INITIALIZED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.ACTIVATED);
+        user.setStatus(User.UserStatus.INITIALIZED);
+
+        //then throws IllegalArgumentException
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void status_DOES_NOT_change_from_DEACTIVATED_to_INITIALIZED() {
+        //given:
+
+        //when:
+        user.setStatus(User.UserStatus.ACTIVATED);
+        user.setStatus(User.UserStatus.DEACTIVATED);
+        user.setStatus(User.UserStatus.INITIALIZED);
+
+        //then throws IllegalArgumentException
+    }
+
 }

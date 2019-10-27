@@ -11,12 +11,19 @@ public class User {
     UserStatus status;
 
     //package-private
-    User() {}
+    User() {
+        this.registered = LocalDateTime.now();
+        this.status = UserStatus.INITIALIZED;
+    }
 
     public User(String username) {
         this.username = username;
         this.registered = LocalDateTime.now();
         this.status = UserStatus.INITIALIZED;
+    }
+
+    public void login() {
+        this.lastLoggedIn = LocalDateTime.now();
     }
 
     public void printLastLoggedIn() {
@@ -39,10 +46,40 @@ public class User {
         return dateTime.until(LocalDateTime.now(), ChronoUnit.MINUTES);
     }
 
+    public void setStatus(UserStatus status) {
+        this.status = this.status.next(status);
+    }
+
     public enum UserStatus {
-        INITIALIZED,
-        ACTIVATED,
-        DEACTIVATED
+        INITIALIZED {
+            @Override
+            public UserStatus next(UserStatus status) {
+                if(status.equals(DEACTIVATED))
+                    throw new IllegalArgumentException();
+
+                return ACTIVATED;
+            }
+        },
+        ACTIVATED {
+            @Override
+            public UserStatus next(UserStatus status) {
+                if(status.equals(INITIALIZED))
+                    throw new IllegalArgumentException();
+
+                return DEACTIVATED;
+            }
+        },
+        DEACTIVATED {
+            @Override
+            public UserStatus next(UserStatus status) {
+                if(status.equals(INITIALIZED))
+                    throw new IllegalArgumentException();
+
+                return ACTIVATED;
+            }
+        };
+
+        public abstract UserStatus next(UserStatus status);
     }
 
 }
