@@ -2,9 +2,24 @@ package pl.sda.javawwa22.tictactoe;
 
 import com.google.common.base.Preconditions;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Board {
     Sign[] signs = new Sign[9];
     Sign currentSign;
+
+    static List<String> WINNING_SEQUENCES = Arrays.asList(
+        "S--S--S--",
+        "-S--S--S-",
+        "--S--S--S",
+        "SSS------",
+        "---SSS---",
+        "------SSS",
+        "S---S---S",
+        "--S-S-S--"
+    );
 
     public Board(Sign startingSign) {
         currentSign = startingSign;
@@ -42,6 +57,41 @@ public class Board {
             }
             else {
                 stringBuilder.append("|");
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public boolean checkWinner(Sign sign) {
+        String boardView = getBoardView();
+        for(String winningSeq : WINNING_SEQUENCES) {
+            int winningPositionsTaken = 0;
+            for(char c : winningSeq.toCharArray()) {
+                if(c == 'S') {
+                    //Sign.X.name() = "X" -> 'X'
+                    if(c == sign.name().charAt(0)) {
+                        winningPositionsTaken++;
+                    }
+                }
+            }
+            if(winningPositionsTaken == 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //metoda typu query - 'odpytuje o dane', nie zmienia stanu wewnetrznego obiektu
+    String getBoardView() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(Sign s : signs) {
+            if(s == null) {
+                stringBuilder.append("-");
+            }
+            else {
+                stringBuilder.append(s.name());
             }
         }
 

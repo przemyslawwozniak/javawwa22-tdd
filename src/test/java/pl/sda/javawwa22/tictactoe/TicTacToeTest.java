@@ -5,6 +5,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
 public class TicTacToeTest {
 
     Board board;
@@ -121,6 +124,57 @@ public class TicTacToeTest {
         //then:
         Assertions.assertThat(board.getPrintableBoard())
                 .isEqualTo("0|X|2\nO|X|X\n6|O|8\n");
+    }
+
+    @Test
+    public void gets_correct_board_view() {
+
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("---------");
+
+        playerX.placeSign(board, 4);
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("----X----");
+
+        playerO.placeSign(board, 3);
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("---OX----");
+
+        playerX.placeSign(board, 1);
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("-X-OX----");
+
+        playerO.placeSign(board, 7);
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("-X-OX--O-");
+
+        playerX.placeSign(board, 5);
+        Assertions.assertThat(board.getBoardView())
+                .isEqualTo("-X-OXX-O-");
+    }
+
+    @Test
+    public void check_winning_positions(String winningSequence, Board.Sign sign) {
+        board = spy(new Board(Board.Sign.X));
+        when(board.getBoardView()).thenReturn(winningSequence);
+
+        boolean isWinner = board.checkWinner(sign);
+
+        Assertions.assertThat(isWinner).isTrue();
+    }
+
+    /*
+    XOX
+    OXO
+    O_X
+     */
+    @DataProvider(name = "wonGamesPlayed")
+    private Object[][] getWonGamesPlayed() {
+        return new Object[][] {
+                {"XOXOXOO-X", Board.Sign.X},
+                {"", Board.Sign.X},
+                {"", Board.Sign.X},
+        };
     }
 
     @DataProvider(name = "allowedPositions")
