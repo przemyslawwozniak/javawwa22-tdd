@@ -10,4 +10,9 @@ public class Player {
     public void placeSign(Board board, int position) {
         board.placeSign(sign, position);
     }
+
+    @Override
+    public String toString() {
+        return "Gracz " + sign.name();
+    }
 }

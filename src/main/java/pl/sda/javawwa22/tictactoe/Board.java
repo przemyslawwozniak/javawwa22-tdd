@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class Board {
     Sign[] signs = new Sign[9];
@@ -98,6 +98,15 @@ public class Board {
         }
 
         return stringBuilder.toString();
+    }
+
+    public boolean isBoardFull() {
+        return Arrays.stream(signs)
+                .noneMatch(Objects::isNull);
+    }
+
+    public Sign getCurrentSign() {
+        return currentSign;
     }
 
     public enum Sign {
